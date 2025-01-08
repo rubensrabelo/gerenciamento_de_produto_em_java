@@ -51,6 +51,7 @@ public class ProductService {
 			Product product = repository.findById(id)
 					.orElseThrow(() -> new ResourceNotFoundException("Project", id));
 			updateData(product, productUpdated);
+			repository.save(product);
 			return product;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Product", id);
