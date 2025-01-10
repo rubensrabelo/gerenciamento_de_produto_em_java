@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.management.product.models.Product;
+import com.management.product.data.vo.v1.ProductVO;
 import com.management.product.services.ProductService;
 
 @RestController
@@ -26,19 +26,19 @@ public class ProductController {
 	private ProductService service;
 	
 	@GetMapping
-	private ResponseEntity<List<Product>> findAll() {
-		List<Product> products = service.findAll();
+	private ResponseEntity<List<ProductVO>> findAll() {
+		List<ProductVO> products = service.findAll();
 		return ResponseEntity.ok().body(products);
 	}
 	
 	@GetMapping(value = "/{id}")
-	private ResponseEntity<Product> findById(@PathVariable Long id) {
-		Product product = service.findById(id);
+	private ResponseEntity<ProductVO> findById(@PathVariable Long id) {
+		ProductVO product = service.findById(id);
 		return ResponseEntity.ok().body(product);
 	}
 	
 	@PostMapping
-	private ResponseEntity<Product> create(@RequestBody Product product) {
+	private ResponseEntity<ProductVO> create(@RequestBody ProductVO product) {
 		product = service.create(product);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(product.getId()).toUri();
@@ -52,7 +52,7 @@ public class ProductController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	private ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
+	private ResponseEntity<ProductVO> update(@PathVariable Long id, @RequestBody ProductVO product) {
 		product = service.update(id, product);
 		return ResponseEntity.ok().body(product);
 	}
