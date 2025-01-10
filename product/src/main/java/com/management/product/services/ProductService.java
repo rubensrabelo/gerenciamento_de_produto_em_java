@@ -1,12 +1,15 @@
 package com.management.product.services;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.management.product.data.vo.v1.ProductVO;
+import com.management.product.mapper.DozerMapper;
 import com.management.product.models.Product;
 import com.management.product.repositories.ProductRepository;
 import com.management.product.services.exceptions.DatabaseException;
@@ -17,27 +20,37 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ProductService {
 	
+	private Logger logger = Logger.getLogger(ProductService.class.getName());
+	
 	@Autowired
 	private ProductRepository repository;
 	
-	public List<Product> findAll() {
+	public List<ProductVO> findAll() {
+		logger.info("Find all products!");
+		
 		List<Product> products = repository.findAll();
-		return products;
+		return DozerMapper.parseListObjects(products, ProductVO.class);
 	}
 	
-	public Product findById(Long id) {
+	public ProductVO findById(Long id) {
+		logger.info("Finding one product!");
+		
 		Product product = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", id));
-		return product;
+		return DozerMapper.parseObject(product, ProductVO.class);
 	}
 	
-	public Product create(Product product) {
-		product = repository.save(product);
-		return product;
+	public ProductVO create(ProductVO product) {
+		logger.info("Creating one person!");
+		var entity = DozerMapper.parseObject(product, Product.class);
+		var vo = DozerMapper.parseObject(repository.save(entity), ProductVO.class);
+		return vo;
 	}
 	
 	public void delete(Long id) {
 		try {
+			logger.info("Deleting one person!");
+			
 			repository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Product", id);
@@ -46,13 +59,17 @@ public class ProductService {
 		}
 	}
 	
-	public Product update(Long id, Product productUpdated) {
+	public ProductVO update(Long id, ProductVO productVOUpdated) {
 		try {
+			logger.info("Updating one person!");
+			
 			Product product = repository.findById(id)
 					.orElseThrow(() -> new ResourceNotFoundException("Project", id));
+			var productUpdated = DozerMapper.parseObject(productVOUpdated, Product.class);
 			updateData(product, productUpdated);
 			repository.save(product);
-			return product;
+			var vo = DozerMapper.parseObject(product, ProductVO.class);
+			return vo;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Product", id);
 		}
