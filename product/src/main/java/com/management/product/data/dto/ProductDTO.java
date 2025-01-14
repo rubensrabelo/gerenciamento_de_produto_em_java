@@ -1,9 +1,9 @@
-package com.management.product.data.vo.v1;
+package com.management.product.data.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ProductVO implements Serializable {
+public class ProductDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -11,10 +11,10 @@ public class ProductVO implements Serializable {
 	private String name;
 	private Double price;
 	
-	public ProductVO() {
+	public ProductDTO() {
 	}
 
-	public ProductVO(Long id, String name, Double price) {
+	public ProductDTO(Long id, String name, Double price) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
@@ -57,7 +57,7 @@ public class ProductVO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ProductVO other = (ProductVO) obj;
+		ProductDTO other = (ProductDTO) obj;
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(price, other.price);
 	}
 }

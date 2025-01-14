@@ -8,7 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.management.product.data.vo.v1.ProductVO;
+import com.management.product.data.dto.ProductDTO;
 import com.management.product.mapper.DozerMapper;
 import com.management.product.models.Product;
 import com.management.product.repositories.ProductRepository;
@@ -25,25 +25,25 @@ public class ProductService {
 	@Autowired
 	private ProductRepository repository;
 	
-	public List<ProductVO> findAll() {
+	public List<ProductDTO> findAll() {
 		logger.info("Find all products!");
 		
 		List<Product> products = repository.findAll();
-		return DozerMapper.parseListObjects(products, ProductVO.class);
+		return DozerMapper.parseListObjects(products, ProductDTO.class);
 	}
 	
-	public ProductVO findById(Long id) {
+	public ProductDTO findById(Long id) {
 		logger.info("Finding one product!");
 		
 		Product product = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", id));
-		return DozerMapper.parseObject(product, ProductVO.class);
+		return DozerMapper.parseObject(product, ProductDTO.class);
 	}
 	
-	public ProductVO create(ProductVO product) {
+	public ProductDTO create(ProductDTO product) {
 		logger.info("Creating one person!");
 		var entity = DozerMapper.parseObject(product, Product.class);
-		var vo = DozerMapper.parseObject(repository.save(entity), ProductVO.class);
+		var vo = DozerMapper.parseObject(repository.save(entity), ProductDTO.class);
 		return vo;
 	}
 	
@@ -59,7 +59,7 @@ public class ProductService {
 		}
 	}
 	
-	public ProductVO update(Long id, ProductVO productVOUpdated) {
+	public ProductDTO update(Long id, ProductDTO productVOUpdated) {
 		try {
 			logger.info("Updating one person!");
 			
@@ -68,7 +68,7 @@ public class ProductService {
 			var productUpdated = DozerMapper.parseObject(productVOUpdated, Product.class);
 			updateData(product, productUpdated);
 			repository.save(product);
-			var vo = DozerMapper.parseObject(product, ProductVO.class);
+			var vo = DozerMapper.parseObject(product, ProductDTO.class);
 			return vo;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Product", id);
