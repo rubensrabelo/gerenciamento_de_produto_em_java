@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,19 +26,39 @@ public class ProductController {
 	@Autowired
 	private ProductService service;
 	
-	@GetMapping
+	@GetMapping(produces = {
+			MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_YAML_VALUE
+	})
 	private ResponseEntity<List<ProductDTO>> findAll() {
 		List<ProductDTO> products = service.findAll();
 		return ResponseEntity.ok().body(products);
 	}
 	
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/{id}",
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE,
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_YAML_VALUE
+			})
 	private ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
 		ProductDTO product = service.findById(id);
 		return ResponseEntity.ok().body(product);
 	}
 	
-	@PostMapping
+	@PostMapping(
+			consumes = {
+					MediaType.APPLICATION_JSON_VALUE,
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_YAML_VALUE
+			},
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE,
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_YAML_VALUE
+			}
+			)
 	private ResponseEntity<ProductDTO> create(@RequestBody ProductDTO product) {
 		product = service.create(product);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -51,7 +72,18 @@ public class ProductController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping(value = "/{id}")
+	@PutMapping(value = "/{id}",
+			consumes = {
+					MediaType.APPLICATION_JSON_VALUE,
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_YAML_VALUE
+			},
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE,
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_YAML_VALUE
+			}
+			)
 	private ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO product) {
 		product = service.update(id, product);
 		return ResponseEntity.ok().body(product);
