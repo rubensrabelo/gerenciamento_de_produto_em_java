@@ -1,4 +1,4 @@
-INSERT INTO product (name, price)
+INSERT INTO tb_product (name, price)
 VALUES 
     ('Laptop Dell Inspiron', 1500.00),
     ('Smartphone iPhone 13', 6999.00),
