@@ -3,7 +3,9 @@ package com.management.product.data.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ProductDTO implements Serializable {
+import org.springframework.hateoas.RepresentationModel;
+
+public class ProductDTO extends RepresentationModel<ProductDTO> implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
