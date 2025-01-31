@@ -31,7 +31,7 @@ public class ProductController {
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_YAML_VALUE
 	})
-	private ResponseEntity<List<ProductDTO>> findAll() {
+	public ResponseEntity<List<ProductDTO>> findAll() {
 		List<ProductDTO> products = service.findAll();
 		return ResponseEntity.ok().body(products);
 	}
@@ -42,7 +42,7 @@ public class ProductController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_YAML_VALUE
 			})
-	private ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
 		ProductDTO product = service.findById(id);
 		return ResponseEntity.ok().body(product);
 	}
@@ -59,7 +59,7 @@ public class ProductController {
 					MediaType.APPLICATION_YAML_VALUE
 			}
 			)
-	private ResponseEntity<ProductDTO> create(@RequestBody ProductDTO product) {
+	public ResponseEntity<ProductDTO> create(@RequestBody ProductDTO product) {
 		product = service.create(product);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(product.getId()).toUri();
@@ -67,7 +67,7 @@ public class ProductController {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	private ResponseEntity<Void> delete(@PathVariable Long id){
+	public ResponseEntity<Void> delete(@PathVariable Long id){
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
@@ -84,7 +84,7 @@ public class ProductController {
 					MediaType.APPLICATION_YAML_VALUE
 			}
 			)
-	private ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO product) {
+	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO product) {
 		product = service.update(id, product);
 		return ResponseEntity.ok().body(product);
 	}
