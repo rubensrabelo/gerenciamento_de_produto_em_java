@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.management.product.controllers.ProductController;
 import com.management.product.data.dto.ProductDTO;
 import com.management.product.mapper.DozerMapper;
 import com.management.product.models.Product;
@@ -28,23 +31,28 @@ public class ProductService {
 	public List<ProductDTO> findAll() {
 		logger.info("Find all products!");
 		
-		List<Product> products = repository.findAll();
-		return DozerMapper.parseListObjects(products, ProductDTO.class);
+		List<Product> entities = repository.findAll();
+		var dtos = DozerMapper.parseListObjects(entities, ProductDTO.class);
+		dtos.forEach(this::addHateoasLinks);
+		return dtos;
 	}
 	
 	public ProductDTO findById(Long id) {
 		logger.info("Finding one product!");
 		
-		Product product = repository.findById(id)
+		Product entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", id));
-		return DozerMapper.parseObject(product, ProductDTO.class);
+		var dto = DozerMapper.parseObject(entity, ProductDTO.class);
+		addHateoasLinks(dto);
+		return dto;
 	}
 	
 	public ProductDTO create(ProductDTO product) {
 		logger.info("Creating one person!");
 		var entity = DozerMapper.parseObject(product, Product.class);
-		var vo = DozerMapper.parseObject(repository.save(entity), ProductDTO.class);
-		return vo;
+		var dto = DozerMapper.parseObject(repository.save(entity), ProductDTO.class);
+		addHateoasLinks(dto);
+		return dto;
 	}
 	
 	public void delete(Long id) {
@@ -63,20 +71,29 @@ public class ProductService {
 		try {
 			logger.info("Updating one person!");
 			
-			Product product = repository.findById(id)
+			Product entity = repository.findById(id)
 					.orElseThrow(() -> new ResourceNotFoundException("Project", id));
-			var productUpdated = DozerMapper.parseObject(productVOUpdated, Product.class);
-			updateData(product, productUpdated);
-			repository.save(product);
-			var vo = DozerMapper.parseObject(product, ProductDTO.class);
-			return vo;
+			var updated = DozerMapper.parseObject(productVOUpdated, Product.class);
+			updateData(entity, updated);
+			repository.save(entity);
+			var dto = DozerMapper.parseObject(entity, ProductDTO.class);
+			addHateoasLinks(dto);
+			return dto;
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Product", id);
 		}
 	}
 
-	private void updateData(Product product, Product productUpdated) {
-		product.setName(productUpdated.getName());
-		product.setPrice(productUpdated.getPrice());
+	private void updateData(Product entity, Product updated) {
+		entity.setName(updated.getName());
+		entity.setPrice(updated.getPrice());
+	}
+	
+	private void addHateoasLinks(ProductDTO dto) {
+		 dto.add(linkTo(methodOn(ProductController.class).findById(dto.getId())).withSelfRel().withType("GET"));
+	        dto.add(linkTo(methodOn(ProductController.class).findAll()).withRel("findAll").withType("GET"));
+	        dto.add(linkTo(methodOn(ProductController.class).create(dto)).withRel("create").withType("POST"));
+	        dto.add(linkTo(methodOn(ProductController.class).update(dto.getId(), dto)).withRel("update").withType("PUT"));
+	        dto.add(linkTo(methodOn(ProductController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
 	}
 }
