@@ -72,7 +72,7 @@ public class ProductController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping(value = "/{id}",
+	@PutMapping(
 			consumes = {
 					MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE,
@@ -84,8 +84,8 @@ public class ProductController {
 					MediaType.APPLICATION_YAML_VALUE
 			}
 			)
-	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO product) {
-		product = service.update(id, product);
+	public ResponseEntity<ProductDTO> update(@RequestBody ProductDTO product) {
+		product = service.update(product);
 		return ResponseEntity.ok().body(product);
 	}
 }

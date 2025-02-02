@@ -59,7 +59,9 @@ public class ProductService {
 		try {
 			logger.info("Deleting one person!");
 			
-			repository.deleteById(id);
+			Product entity = repository.findById(id)
+								.orElseThrow(() -> new ResourceNotFoundException("Product", id));
+			repository.delete(entity);
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Product", id);
 		} catch (DataIntegrityViolationException e) {
@@ -67,12 +69,12 @@ public class ProductService {
 		}
 	}
 	
-	public ProductDTO update(Long id, ProductDTO productVOUpdated) {
+	public ProductDTO update(ProductDTO productVOUpdated) {
 		try {
 			logger.info("Updating one person!");
 			
-			Product entity = repository.findById(id)
-					.orElseThrow(() -> new ResourceNotFoundException("Project", id));
+			Product entity = repository.findById(productVOUpdated.getId())
+					.orElseThrow(() -> new ResourceNotFoundException("Project", productVOUpdated.getId()));
 			var updated = DozerMapper.parseObject(productVOUpdated, Product.class);
 			updateData(entity, updated);
 			repository.save(entity);
@@ -80,7 +82,7 @@ public class ProductService {
 			addHateoasLinks(dto);
 			return dto;
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Product", id);
+			throw new ResourceNotFoundException("Product", productVOUpdated.getId());
 		}
 	}
 
@@ -93,7 +95,7 @@ public class ProductService {
 		 dto.add(linkTo(methodOn(ProductController.class).findById(dto.getId())).withSelfRel().withType("GET"));
 	        dto.add(linkTo(methodOn(ProductController.class).findAll()).withRel("findAll").withType("GET"));
 	        dto.add(linkTo(methodOn(ProductController.class).create(dto)).withRel("create").withType("POST"));
-	        dto.add(linkTo(methodOn(ProductController.class).update(dto.getId(), dto)).withRel("update").withType("PUT"));
+	        dto.add(linkTo(methodOn(ProductController.class).update(dto)).withRel("update").withType("PUT"));
 	        dto.add(linkTo(methodOn(ProductController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
 	}
 }
