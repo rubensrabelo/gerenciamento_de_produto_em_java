@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.management.product.services.exceptions.RequiredObjectIsNullException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -45,8 +47,117 @@ class ProductServiceTest {
 
 	@Test
 	void testFindAll() {
-		
-	}
+        List<Product> list = input.mockEntityList(14);
+		when(repository.findAll()).thenReturn(list);
+		List<ProductDTO> prods = service.findAll();
+
+		assertNotNull(prods);
+		assertEquals(14, prods.size());
+
+		var prodOne = prods.get(1);
+
+		assertNotNull(prodOne);
+		assertNotNull(prodOne.getId());
+		assertNotNull(prodOne.getLinks());
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("self")
+				&& link.getHref().equals("/products/1")
+				&& link.getType().equals("GET")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("findAll")
+						&& link.getHref().equals("/products/")
+						&& link.getType().equals("GET")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("create")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("POST")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("update")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("PUT")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("delete")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("DELETE")));
+
+		assertEquals("Name 1", prodOne.getName());
+		assertEquals(1D, prodOne.getPrice());
+
+
+		var prodFour = prods.get(4);
+
+		assertNotNull(prodFour);
+		assertNotNull(prodFour.getId());
+		assertNotNull(prodFour.getLinks());
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("self")
+						&& link.getHref().equals("/products/1")
+						&& link.getType().equals("GET")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("findAll")
+						&& link.getHref().equals("/products/")
+						&& link.getType().equals("GET")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("create")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("POST")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("update")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("PUT")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("delete")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("DELETE")));
+
+		assertEquals("Name 4", prodFour.getName());
+		assertEquals(4D, prodFour.getPrice());
+
+
+		var prodSeven = prods.get(7);
+
+		assertNotNull(prodSeven);
+		assertNotNull(prodSeven.getId());
+		assertNotNull(prodSeven.getLinks());
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("self")
+						&& link.getHref().equals("/products/1")
+						&& link.getType().equals("GET")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("findAll")
+						&& link.getHref().equals("/products/")
+						&& link.getType().equals("GET")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("create")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("POST")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("update")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("PUT")));
+
+		assertNotNull(prodOne.getLinks().stream()
+				.anyMatch(link -> link.getRel().value().equals("delete")
+						&& link.getHref().equals("/product/1")
+						&& link.getType().equals("DELETE")));
+
+		assertEquals("Name 7", prodSeven.getName());
+		assertEquals(7D, prodSeven.getPrice());
+    }
 
 	@Test
 	void testFindById() {
@@ -145,6 +256,18 @@ class ProductServiceTest {
 	}
 
 	@Test
+	void testCreateWithNullPerson() {
+		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
+			service.create(null);
+		});
+
+		String expectedMessage = "It is not allowed to persist a null object!";
+		String actualMessage = exception.getMessage();
+
+		assertTrue(actualMessage.contains(expectedMessage));
+	}
+
+	@Test
 	void testDelete() {
 		Product product = input.mockEntity(1);
 		
@@ -207,4 +330,15 @@ class ProductServiceTest {
 		assertEquals(1D, product.getPrice());
 	}
 
+	@Test
+	void testUpdateWithNullPerson() {
+		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
+			service.update(null);
+		});
+
+		String expectedMessage = "It is not allowed to persist a null object!";
+		String actualMessage = exception.getMessage();
+
+		assertTrue(actualMessage.contains(expectedMessage));
+	}
 }
