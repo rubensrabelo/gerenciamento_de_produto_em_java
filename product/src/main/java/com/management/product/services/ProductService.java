@@ -3,6 +3,7 @@ package com.management.product.services;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.management.product.services.exceptions.RequiredObjectIsNullException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -48,6 +49,7 @@ public class ProductService {
 	}
 	
 	public ProductDTO create(ProductDTO product) {
+		if(product == null) throw new RequiredObjectIsNullException();
 		logger.info("Creating one person!");
 		var entity = DozerMapper.parseObject(product, Product.class);
 		var dto = DozerMapper.parseObject(repository.save(entity), ProductDTO.class);
@@ -69,20 +71,22 @@ public class ProductService {
 		}
 	}
 	
-	public ProductDTO update(ProductDTO productVOUpdated) {
+	public ProductDTO update(ProductDTO productDTOUpdated) {
 		try {
+			if(productDTOUpdated == null) throw new RequiredObjectIsNullException();
+
 			logger.info("Updating one person!");
 			
-			Product entity = repository.findById(productVOUpdated.getId())
-					.orElseThrow(() -> new ResourceNotFoundException("Project", productVOUpdated.getId()));
-			var updated = DozerMapper.parseObject(productVOUpdated, Product.class);
+			Product entity = repository.findById(productDTOUpdated.getId())
+					.orElseThrow(() -> new ResourceNotFoundException("Project", productDTOUpdated.getId()));
+			var updated = DozerMapper.parseObject(productDTOUpdated, Product.class);
 			updateData(entity, updated);
 			repository.save(entity);
 			var dto = DozerMapper.parseObject(entity, ProductDTO.class);
 			addHateoasLinks(dto);
 			return dto;
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Product", productVOUpdated.getId());
+			throw new ResourceNotFoundException("Product", productDTOUpdated.getId());
 		}
 	}
 
