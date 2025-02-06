@@ -3,6 +3,7 @@ package com.management.product.controllers;
 import java.net.URI;
 import java.util.List;
 
+import com.management.product.controllers.docs.ProductControllerDocs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import com.management.product.services.ProductService;
 
 @RestController
 @RequestMapping(value = "products")
-public class ProductController {
+public class ProductController implements ProductControllerDocs {
 	
 	@Autowired
 	private ProductService service;
@@ -31,6 +32,7 @@ public class ProductController {
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_YAML_VALUE
 	})
+	@Override
 	public ResponseEntity<List<ProductDTO>> findAll() {
 		List<ProductDTO> products = service.findAll();
 		return ResponseEntity.ok().body(products);
@@ -42,6 +44,7 @@ public class ProductController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_YAML_VALUE
 			})
+	@Override
 	public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
 		ProductDTO product = service.findById(id);
 		return ResponseEntity.ok().body(product);
@@ -59,6 +62,7 @@ public class ProductController {
 					MediaType.APPLICATION_YAML_VALUE
 			}
 			)
+	@Override
 	public ResponseEntity<ProductDTO> create(@RequestBody ProductDTO product) {
 		product = service.create(product);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -67,6 +71,7 @@ public class ProductController {
 	}
 	
 	@DeleteMapping(value = "/{id}")
+	@Override
 	public ResponseEntity<Void> delete(@PathVariable Long id){
 		service.delete(id);
 		return ResponseEntity.noContent().build();
@@ -84,6 +89,7 @@ public class ProductController {
 					MediaType.APPLICATION_YAML_VALUE
 			}
 			)
+	@Override
 	public ResponseEntity<ProductDTO> update(@RequestBody ProductDTO product) {
 		product = service.update(product);
 		return ResponseEntity.ok().body(product);
