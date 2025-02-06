@@ -35,7 +35,7 @@ public interface ProductControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    List<ProductDTO> findAll();
+    ResponseEntity<List<ProductDTO>> findAll();
 
     @Operation(summary = "Finds a Product",
             description = "Find a specific product by your ID",
@@ -53,7 +53,7 @@ public interface ProductControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ProductDTO findById(@PathVariable("id") Long id);
+    ResponseEntity<ProductDTO> findById(@PathVariable("id") Long id);
 
     @Operation(summary = "Adds a new Product",
             description = "Adds a new product by passing in a JSON, XML or YML representation of the product.",
@@ -69,7 +69,7 @@ public interface ProductControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ProductDTO create(@RequestBody ProductDTO person);
+    ResponseEntity<ProductDTO> create(@RequestBody ProductDTO person);
 
     @Operation(summary = "Updates a product's information",
             description = "Updates a product's information by passing in a JSON, XML or YML representation of the updated product.",
@@ -87,7 +87,7 @@ public interface ProductControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ProductDTO update(@RequestBody ProductDTO person);
+    ResponseEntity<ProductDTO> update(@RequestBody ProductDTO person);
 
     @Operation(summary = "Deletes a Product",
             description = "Deletes a specific product by their ID",
@@ -102,5 +102,5 @@ public interface ProductControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<?> delete(@PathVariable("id") Long id);
+    ResponseEntity<Void> delete(@PathVariable("id") Long id);
 }
