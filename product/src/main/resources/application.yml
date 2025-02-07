@@ -16,6 +16,6 @@ spring:
       mode: always
 
 spring-doc:
-  paths-to-match: /api/**/v1/**
+  paths-to-match: /products/**
   swagger-ui:
     use-root-path: true
