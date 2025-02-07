@@ -39,7 +39,7 @@ public interface ProductControllerDocs {
 
     @Operation(summary = "Finds a Product",
             description = "Find a specific product by your ID",
-            tags = {"Product"},
+            tags = {"Products"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -57,7 +57,7 @@ public interface ProductControllerDocs {
 
     @Operation(summary = "Adds a new Product",
             description = "Adds a new product by passing in a JSON, XML or YML representation of the product.",
-            tags = {"Product"},
+            tags = {"Products"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -73,7 +73,7 @@ public interface ProductControllerDocs {
 
     @Operation(summary = "Updates a product's information",
             description = "Updates a product's information by passing in a JSON, XML or YML representation of the updated product.",
-            tags = {"Product"},
+            tags = {"Products"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -91,7 +91,7 @@ public interface ProductControllerDocs {
 
     @Operation(summary = "Deletes a Product",
             description = "Deletes a specific product by their ID",
-            tags = {"Product"},
+            tags = {"Products"},
             responses = {
                     @ApiResponse(
                             description = "No Content",
