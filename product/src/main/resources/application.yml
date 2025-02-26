@@ -15,9 +15,9 @@ spring:
     init:
       mode: always
 
-logging:
-  level:
-    com.management.product: DEBUG
+#logging:
+#  level:
+#    com.management.product: DEBUG
 
 spring-doc:
   paths-to-match: /products/**
