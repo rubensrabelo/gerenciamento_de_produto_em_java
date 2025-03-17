@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.management.product.data.dto.ProductDTO;
-import com.management.product.mapper.DozerMapper;
 import com.management.product.models.Product;
 import com.management.product.unittest.mapper.mocks.MockProduct;
 

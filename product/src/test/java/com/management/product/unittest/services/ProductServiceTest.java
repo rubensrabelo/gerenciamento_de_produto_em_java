@@ -1,4 +1,4 @@
-package com.management.product.services;
+package com.management.product.unittest.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

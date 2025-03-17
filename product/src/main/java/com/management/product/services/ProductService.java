@@ -13,7 +13,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.management.product.controllers.ProductController;
 import com.management.product.data.dto.ProductDTO;
-import com.management.product.mapper.DozerMapper;
+import com.management.product.unittest.mapper.DozerMapper;
 import com.management.product.models.Product;
 import com.management.product.repositories.ProductRepository;
 import com.management.product.services.exceptions.DatabaseException;
