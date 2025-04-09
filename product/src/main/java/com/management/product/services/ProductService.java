@@ -78,7 +78,7 @@ public class ProductService {
 			logger.info("Updating one person!");
 			
 			Product entity = repository.findById(productDTOUpdated.getId())
-					.orElseThrow(() -> new ResourceNotFoundException("Project", productDTOUpdated.getId()));
+					.orElseThrow(() -> new ResourceNotFoundException("Product", productDTOUpdated.getId()));
 			var updated = DozerMapper.parseObject(productDTOUpdated, Product.class);
 			updateData(entity, updated);
 			repository.save(entity);
@@ -88,6 +88,21 @@ public class ProductService {
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Product", productDTOUpdated.getId());
 		}
+	}
+
+	public ProductDTO productIsNotInStock(Long id) {
+		logger.info("Informing that the product is not in stock");
+
+		repository.findById((id))
+				.orElseThrow(() -> new ResourceNotFoundException("Product", id));
+
+		repository.productIsNotInStock(id);
+
+		Product entity = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Product", id));
+		var dto = DozerMapper.parseObject(entity, ProductDTO.class);
+		addHateoasLinks(dto);
+		return dto;
 	}
 
 	private void updateData(Product entity, Product updated) {
