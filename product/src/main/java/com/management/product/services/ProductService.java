@@ -93,6 +93,7 @@ public class ProductService {
 	private void updateData(Product entity, Product updated) {
 		entity.setName(updated.getName());
 		entity.setPrice(updated.getPrice());
+		entity.setInStock(updated.getInStock());
 	}
 	
 	private void addHateoasLinks(ProductDTO dto) {

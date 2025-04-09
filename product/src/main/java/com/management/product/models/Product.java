@@ -3,12 +3,7 @@ package com.management.product.models;
 import java.io.Serializable;
 import java.util.Objects;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_product")
@@ -23,14 +18,23 @@ public class Product implements Serializable {
 	@Column(unique = true, nullable = false)
 	private String name;
 	private Double price;
+
+	@Column(nullable = false)
+	private Boolean isInStock;
 	
 	public Product() {
 	}
 
-	public Product(Long id, String name, Double price) {
+	public Product(Long id, String name, Double price, Boolean isInStock) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
+		this.isInStock = isInStock;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		if(isInStock == null) isInStock = true;
 	}
 
 	public Long getId() {
@@ -57,20 +61,23 @@ public class Product implements Serializable {
 		this.price = price;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, name, price);
+	public Boolean getInStock() {
+		return isInStock;
+	}
+
+	public void setInStock(Boolean inStock) {
+		isInStock = inStock;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(price, other.price);
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		Product product = (Product) o;
+		return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(isInStock, product.isInStock);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, price, isInStock);
 	}
 }

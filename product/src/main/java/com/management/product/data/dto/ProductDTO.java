@@ -12,14 +12,16 @@ public class ProductDTO extends RepresentationModel<ProductDTO> implements Seria
 	private Long id;
 	private String name;
 	private Double price;
+	private Boolean isInStock;
 	
 	public ProductDTO() {
 	}
 
-	public ProductDTO(Long id, String name, Double price) {
+	public ProductDTO(Long id, String name, Double price, Boolean isInStock) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
+		this.isInStock = isInStock;
 	}
 
 	public Long getId() {
@@ -46,20 +48,25 @@ public class ProductDTO extends RepresentationModel<ProductDTO> implements Seria
 		this.price = price;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, name, price);
+	public Boolean getInStock() {
+		return isInStock;
+	}
+
+	public void setInStock(Boolean inStock) {
+		isInStock = inStock;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ProductDTO other = (ProductDTO) obj;
-		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(price, other.price);
+	public boolean equals(Object o) {
+
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		ProductDTO that = (ProductDTO) o;
+		return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(isInStock, that.isInStock);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), id, name, price, isInStock);
 	}
 }
