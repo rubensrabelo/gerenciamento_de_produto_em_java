@@ -89,6 +89,24 @@ public interface ProductControllerDocs {
     )
     ResponseEntity<ProductDTO> update(@RequestBody ProductDTO person);
 
+    @Operation(summary = "Product is not is Stock",
+            description = "informs that the Product it not in Stock",
+            tags = {"Products"},
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = ProductDTO.class))
+                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<ProductDTO> productIsNotInStock(@PathVariable Long id);
+
     @Operation(summary = "Deletes a Product",
             description = "Deletes a specific product by their ID",
             tags = {"Products"},
