@@ -10,6 +10,7 @@ public class ProductDTO implements Serializable {
 	private Long id;
 	private String name;
 	private Double price;
+	private Boolean isInStock;
 	
 	public ProductDTO() {
 	}
@@ -36,6 +37,14 @@ public class ProductDTO implements Serializable {
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	public Boolean getInStock() {
+		return isInStock;
+	}
+
+	public void setInStock(Boolean inStock) {
+		isInStock = inStock;
 	}
 
 	@Override

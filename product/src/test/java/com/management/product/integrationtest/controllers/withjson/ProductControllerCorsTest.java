@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ProductControllerTest extends AbstractIntegrationTest {
+class ProductControllerCorsTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
@@ -72,6 +72,7 @@ class ProductControllerTest extends AbstractIntegrationTest {
 
         assertEquals("Product 01", createdProduct.getName());
         assertEquals(1.00, createdProduct.getPrice());
+        assertTrue(createdProduct.getInStock());
     }
 
     @Test
@@ -132,6 +133,7 @@ class ProductControllerTest extends AbstractIntegrationTest {
 
         assertEquals("Product 01", createdProduct.getName());
         assertEquals(1.00, createdProduct.getPrice());
+        assertTrue(createdProduct.getInStock());
     }
 
     @Test
@@ -161,5 +163,6 @@ class ProductControllerTest extends AbstractIntegrationTest {
     private void mockProduct() {
         product.setName("Product 01");
         product.setPrice(1.00);
+        product.setInStock(true);
     }
 }
