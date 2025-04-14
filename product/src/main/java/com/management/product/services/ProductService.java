@@ -118,6 +118,7 @@ public class ProductService {
 	        dto.add(linkTo(methodOn(ProductController.class).findAll()).withRel("findAll").withType("GET"));
 	        dto.add(linkTo(methodOn(ProductController.class).create(dto)).withRel("create").withType("POST"));
 	        dto.add(linkTo(methodOn(ProductController.class).update(dto)).withRel("update").withType("PUT"));
+	        dto.add(linkTo(methodOn(ProductController.class).productIsNotInStock(dto.getId())).withRel("productIsNotInStock").withType("PATCH"));
 	        dto.add(linkTo(methodOn(ProductController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
 	}
 }
