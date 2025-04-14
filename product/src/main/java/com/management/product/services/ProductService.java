@@ -20,6 +20,7 @@ import com.management.product.services.exceptions.DatabaseException;
 import com.management.product.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -90,6 +91,7 @@ public class ProductService {
 		}
 	}
 
+	@Transactional
 	public ProductDTO productIsNotInStock(Long id) {
 		logger.info("Informing that the product is not in stock");
 
