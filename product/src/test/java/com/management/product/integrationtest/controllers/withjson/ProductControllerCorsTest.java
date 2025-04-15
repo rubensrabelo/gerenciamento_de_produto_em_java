@@ -10,15 +10,15 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationFeature;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.MediaType;
 
 import java.io.IOException;
 
 import static io.restassured.RestAssured.given;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -68,11 +68,11 @@ class ProductControllerCorsTest extends AbstractIntegrationTest {
         assertNotNull(createdProduct.getName());
         assertNotNull(createdProduct.getPrice());
 
-        assertTrue(createdProduct.getId() > 0);
+        Assertions.assertTrue(createdProduct.getId() > 0);
 
         assertEquals("Product 01", createdProduct.getName());
         assertEquals(1.00, createdProduct.getPrice());
-        assertTrue(createdProduct.getInStock());
+        Assertions.assertTrue(createdProduct.getInStock());
     }
 
     @Test
@@ -129,11 +129,11 @@ class ProductControllerCorsTest extends AbstractIntegrationTest {
         assertNotNull(createdProduct.getName());
         assertNotNull(createdProduct.getPrice());
 
-        assertTrue(createdProduct.getId() > 0);
+        Assertions.assertTrue(createdProduct.getId() > 0);
 
         assertEquals("Product 01", createdProduct.getName());
         assertEquals(1.00, createdProduct.getPrice());
-        assertTrue(createdProduct.getInStock());
+        Assertions.assertTrue(createdProduct.getInStock());
     }
 
     @Test
