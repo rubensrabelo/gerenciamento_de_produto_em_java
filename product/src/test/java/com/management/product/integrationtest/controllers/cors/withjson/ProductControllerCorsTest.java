@@ -1,4 +1,4 @@
-package com.management.product.integrationtest.controllers.withjson;
+package com.management.product.integrationtest.controllers.cors.withjson;
 
 import com.management.product.config.TestConfigs;
 import com.management.product.integrationtest.dto.ProductDTO;
