@@ -11,14 +11,15 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationFeature;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -162,7 +163,52 @@ class ProductControllerJsonTest extends AbstractIntegrationTest {
         Assertions.assertFalse(createdProduct.getInStock());
     }
 
-    // falta o restante de delete e de findall
+    @Test
+    @Order(5)
+    void delete() {
+
+        given(specification)
+                .pathParam("id", product.getId())
+                .when()
+                .delete("{id}")
+                .then()
+                .statusCode(204);
+    }
+
+    @Test
+    @Order(6)
+    void findAll() throws IOException {
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                .body()
+                .asString();
+
+        List<ProductDTO> products = objectMapper.readValue(content, new TypeReference<List<ProductDTO>>() {});
+
+        ProductDTO productOne = products.get(1);
+
+        assertNotNull(productOne.getId());
+        assertTrue(productOne.getId() > 0);
+
+        assertEquals("Smartphone iPhone 13", productOne.getName());
+        assertEquals(6999.0, productOne.getPrice());
+        Assertions.assertTrue(productOne.getInStock());
+
+        ProductDTO productFour = products.get(4);
+
+        assertNotNull(productFour.getId());
+        assertTrue(productFour.getId() > 0);
+
+        assertEquals("Tênis Nike Air Max 270", productFour.getName());
+        assertEquals(499.9, productFour.getPrice());
+        Assertions.assertTrue(productFour.getInStock());
+    }
 
     private void mockProduct() {
         product.setName("Product 01");
