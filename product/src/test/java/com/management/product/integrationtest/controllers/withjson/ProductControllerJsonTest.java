@@ -159,7 +159,7 @@ class ProductControllerJsonTest extends AbstractIntegrationTest {
 
         assertEquals("Product Updated", createdProduct.getName());
         assertEquals(1.00, createdProduct.getPrice());
-        Assertions.assertTrue(!createdProduct.getInStock());
+        Assertions.assertFalse(createdProduct.getInStock());
     }
 
     // falta o restante de delete e de findall
