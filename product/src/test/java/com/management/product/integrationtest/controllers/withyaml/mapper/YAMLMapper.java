@@ -38,4 +38,8 @@ public class YAMLMapper implements io.restassured.mapper.ObjectMapper {
             throw new IllegalArgumentException("Error serializing YAML content", e);
         }
     }
+
+    public ObjectMapper getMapper() {
+        return this.mapper;
+    }
 }
