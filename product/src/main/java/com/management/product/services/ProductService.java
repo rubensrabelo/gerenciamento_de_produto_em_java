@@ -7,6 +7,12 @@ import com.management.product.services.exceptions.RequiredObjectIsNullException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -29,14 +35,27 @@ public class ProductService {
 	
 	@Autowired
 	private ProductRepository repository;
+
+	PagedResourcesAssembler<ProductDTO> assembler;
 	
-	public List<ProductDTO> findAll() {
+	public PagedModel<EntityModel<ProductDTO>> findAll(Pageable pageable) {
 		logger.info("Find all products!");
 		
-		List<Product> entities = repository.findAll();
-		var dtos = DozerMapper.parseListObjects(entities, ProductDTO.class);
-		dtos.forEach(this::addHateoasLinks);
-		return dtos;
+		var dtoResponse = repository.findAll(pageable)
+				.map(prod -> {
+					var dto = DozerMapper.parseObject(prod, ProductDTO.class);
+					addHateoasLinks(dto);
+					return dto;
+				});
+		Link findAllLinks = WebMvcLinkBuilder.linkTo(
+				WebMvcLinkBuilder.methodOn(ProductController.class)
+						.findAll(
+								pageable.getPageNumber(),
+								pageable.getPageSize(),
+								String.valueOf(pageable.getSort())
+						)
+		).withSelfRel();
+		return assembler.toModel(dtoResponse, findAllLinks);
 	}
 	
 	public ProductDTO findById(Long id) {
@@ -115,7 +134,7 @@ public class ProductService {
 	
 	private void addHateoasLinks(ProductDTO dto) {
 		 dto.add(linkTo(methodOn(ProductController.class).findById(dto.getId())).withSelfRel().withType("GET"));
-	        dto.add(linkTo(methodOn(ProductController.class).findAll()).withRel("findAll").withType("GET"));
+	        dto.add(linkTo(methodOn(ProductController.class).findAll(0, 10, "desc")).withRel("findAll").withType("GET"));
 	        dto.add(linkTo(methodOn(ProductController.class).create(dto)).withRel("create").withType("POST"));
 	        dto.add(linkTo(methodOn(ProductController.class).update(dto)).withRel("update").withType("PUT"));
 	        dto.add(linkTo(methodOn(ProductController.class).productIsNotInStock(dto.getId())).withRel("productIsNotInStock").withType("PATCH"));
