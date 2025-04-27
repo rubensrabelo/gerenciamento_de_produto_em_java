@@ -40,7 +40,7 @@ public class ProductController implements ProductControllerDocs {
 
 		Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "name"));
 
-		return ResponseEntity.ok().body(service.findAll(pageable););
+		return ResponseEntity.ok().body(service.findAll(pageable));
 	}
 	
 	@GetMapping(value = "/{id}",

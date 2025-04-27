@@ -33,10 +33,13 @@ public class ProductService {
 	
 	private Logger logger = Logger.getLogger(ProductService.class.getName());
 	
-	@Autowired
-	private ProductRepository repository;
+	private final ProductRepository repository;
+	private final PagedResourcesAssembler<ProductDTO> assembler;
 
-	PagedResourcesAssembler<ProductDTO> assembler;
+	public ProductService(ProductRepository repository, PagedResourcesAssembler<ProductDTO> assembler) {
+		this.repository = repository;
+		this.assembler = assembler;
+	}
 	
 	public PagedModel<EntityModel<ProductDTO>> findAll(Pageable pageable) {
 		logger.info("Find all products!");
