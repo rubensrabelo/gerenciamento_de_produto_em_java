@@ -60,6 +60,26 @@ public class ProductService {
 		).withSelfRel();
 		return assembler.toModel(dtoResponse, findAllLinks);
 	}
+
+	public PagedModel<EntityModel<ProductDTO>> findProductByName(String name, Pageable pageable) {
+		logger.info("Find products by name!");
+
+		var dtoResponse = repository.findProductByName(name, pageable)
+				.map(prod -> {
+					var dto = DozerMapper.parseObject(prod, ProductDTO.class);
+					addHateoasLinks(dto);
+					return dto;
+				});
+		Link findAllLinks = WebMvcLinkBuilder.linkTo(
+				WebMvcLinkBuilder.methodOn(ProductController.class)
+						.findAll(
+								pageable.getPageNumber(),
+								pageable.getPageSize(),
+								String.valueOf(pageable.getSort())
+						)
+		).withSelfRel();
+		return assembler.toModel(dtoResponse, findAllLinks);
+	}
 	
 	public ProductDTO findById(Long id) {
 		logger.info("Finding one product!");
