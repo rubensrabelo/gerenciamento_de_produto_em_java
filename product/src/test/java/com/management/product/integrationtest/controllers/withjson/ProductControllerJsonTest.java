@@ -2,6 +2,7 @@ package com.management.product.integrationtest.controllers.withjson;
 
 import com.management.product.config.TestConfigs;
 import com.management.product.integrationtest.dto.ProductDTO;
+import com.management.product.integrationtest.dto.wrappers.json.WrapperProductDTO;
 import com.management.product.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -180,6 +181,7 @@ class ProductControllerJsonTest extends AbstractIntegrationTest {
     void findAll() throws IOException {
         var content = given(specification)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
+                .queryParam("page", 0, "size", 10, "direction", "asc")
                 .when()
                 .get()
                 .then()
@@ -189,15 +191,17 @@ class ProductControllerJsonTest extends AbstractIntegrationTest {
                 .body()
                 .asString();
 
-        List<ProductDTO> products = objectMapper.readValue(content, new TypeReference<List<ProductDTO>>() {});
+        // List<ProductDTO> products = objectMapper.readValue(content, new TypeReference<List<ProductDTO>>() {});
+        WrapperProductDTO wrapper = objectMapper.readValue(content, WrapperProductDTO.class);
+        var products = wrapper.getEmbedded().getProducts();
 
         ProductDTO productOne = products.get(1);
 
         assertNotNull(productOne.getId());
         assertTrue(productOne.getId() > 0);
 
-        assertEquals("Smartphone iPhone 13", productOne.getName());
-        assertEquals(6999.0, productOne.getPrice());
+        assertEquals("Cafeteira Nespresso", productOne.getName());
+        assertEquals(699.9, productOne.getPrice());
         Assertions.assertTrue(productOne.getInStock());
 
         ProductDTO productFour = products.get(4);
@@ -205,8 +209,8 @@ class ProductControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(productFour.getId());
         assertTrue(productFour.getId() > 0);
 
-        assertEquals("Tênis Nike Air Max 270", productFour.getName());
-        assertEquals(499.9, productFour.getPrice());
+        assertEquals("Laptop Dell Inspiron", productFour.getName());
+        assertEquals(1500.0, productFour.getPrice());
         Assertions.assertTrue(productFour.getInStock());
     }
 
