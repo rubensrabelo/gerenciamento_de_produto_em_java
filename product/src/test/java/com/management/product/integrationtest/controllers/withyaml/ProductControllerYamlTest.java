@@ -1,6 +1,7 @@
 package com.management.product.integrationtest.controllers.withyaml;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.management.product.config.TestConfigs;
 import com.management.product.integrationtest.controllers.withyaml.mapper.YAMLMapper;
 import com.management.product.integrationtest.dto.ProductDTO;
@@ -159,6 +160,7 @@ class ProductControllerYamlTest extends AbstractIntegrationTest {
     void findAll() throws IOException {
         String response = given(specification)
                 .accept(MediaType.APPLICATION_YAML_VALUE)
+                .queryParam("page", 0, "size", 10, "direction", "asc")
                 .when()
                 .get()
                 .then()
@@ -168,20 +170,29 @@ class ProductControllerYamlTest extends AbstractIntegrationTest {
                 .body()
                 .asString();
 
+        JsonNode root = objectMapper.getMapper().readTree(response);
+        JsonNode contentNode = root.get("content");
+
         List<ProductDTO> products = objectMapper.getMapper()
-                .readValue(response, new TypeReference<>() {});
+                .readValue(contentNode.toString(), new TypeReference<>() {});
 
         ProductDTO productOne = products.get(1);
+
         assertNotNull(productOne.getId());
-        assertEquals("Smartphone iPhone 13", productOne.getName());
-        assertEquals(6999.0, productOne.getPrice());
-        assertTrue(productOne.getInStock());
+        assertTrue(productOne.getId() > 0);
+
+        assertEquals("Cafeteira Nespresso", productOne.getName());
+        assertEquals(699.9, productOne.getPrice());
+        Assertions.assertTrue(productOne.getInStock());
 
         ProductDTO productFour = products.get(4);
+
         assertNotNull(productFour.getId());
-        assertEquals("Tênis Nike Air Max 270", productFour.getName());
-        assertEquals(499.9, productFour.getPrice());
-        assertTrue(productFour.getInStock());
+        assertTrue(productFour.getId() > 0);
+
+        assertEquals("Laptop Dell Inspiron", productFour.getName());
+        assertEquals(1500.0, productFour.getPrice());
+        Assertions.assertTrue(productFour.getInStock());
     }
 
     private static void mockProduct() {

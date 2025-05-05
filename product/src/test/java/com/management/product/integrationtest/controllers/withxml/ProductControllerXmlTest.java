@@ -4,6 +4,7 @@ package com.management.product.integrationtest.controllers.withxml;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.management.product.config.TestConfigs;
 import com.management.product.integrationtest.dto.ProductDTO;
+import com.management.product.integrationtest.dto.wrappers.xml.PagedModelProduct;
 import com.management.product.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -184,6 +185,7 @@ class ProductControllerXmlTest extends AbstractIntegrationTest {
     void findAll() throws IOException {
         var content = given(specification)
                 .accept(MediaType.APPLICATION_XML_VALUE)
+                .queryParam("page", 0, "size", 10, "direction", "asc")
                 .when()
                 .get()
                 .then()
@@ -193,15 +195,16 @@ class ProductControllerXmlTest extends AbstractIntegrationTest {
                 .body()
                 .asString();
 
-        List<ProductDTO> products = objectMapper.readValue(content, new TypeReference<List<ProductDTO>>() {});
+        PagedModelProduct wrapper = objectMapper.readValue(content, PagedModelProduct.class);
+        List<ProductDTO> products = wrapper.getContent();
 
         ProductDTO productOne = products.get(1);
 
         assertNotNull(productOne.getId());
         assertTrue(productOne.getId() > 0);
 
-        assertEquals("Smartphone iPhone 13", productOne.getName());
-        assertEquals(6999.0, productOne.getPrice());
+        assertEquals("Cafeteira Nespresso", productOne.getName());
+        assertEquals(699.9, productOne.getPrice());
         Assertions.assertTrue(productOne.getInStock());
 
         ProductDTO productFour = products.get(4);
@@ -209,8 +212,8 @@ class ProductControllerXmlTest extends AbstractIntegrationTest {
         assertNotNull(productFour.getId());
         assertTrue(productFour.getId() > 0);
 
-        assertEquals("Tênis Nike Air Max 270", productFour.getName());
-        assertEquals(499.9, productFour.getPrice());
+        assertEquals("Laptop Dell Inspiron", productFour.getName());
+        assertEquals(1500.0, productFour.getPrice());
         Assertions.assertTrue(productFour.getInStock());
     }
 
