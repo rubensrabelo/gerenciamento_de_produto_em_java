@@ -1,10 +1,14 @@
 package com.management.product.services;
 
-import java.util.List;
-import java.util.logging.Logger;
-
+import com.management.product.controllers.ProductController;
+import com.management.product.data.dto.ProductDTO;
+import com.management.product.models.Product;
+import com.management.product.repositories.ProductRepository;
+import com.management.product.services.exceptions.DatabaseException;
 import com.management.product.services.exceptions.RequiredObjectIsNullException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.management.product.services.exceptions.ResourceNotFoundException;
+import com.management.product.unittest.mapper.DozerMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
@@ -14,19 +18,12 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.logging.Logger;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import com.management.product.controllers.ProductController;
-import com.management.product.data.dto.ProductDTO;
-import com.management.product.unittest.mapper.DozerMapper;
-import com.management.product.models.Product;
-import com.management.product.repositories.ProductRepository;
-import com.management.product.services.exceptions.DatabaseException;
-import com.management.product.services.exceptions.ResourceNotFoundException;
-
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {

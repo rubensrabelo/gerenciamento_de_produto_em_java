@@ -4,6 +4,7 @@ package com.management.product.integrationtest.controllers.withxml;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.management.product.config.TestConfigs;
 import com.management.product.integrationtest.dto.ProductDTO;
+import com.management.product.integrationtest.dto.wrappers.json.WrapperProductDTO;
 import com.management.product.integrationtest.dto.wrappers.xml.PagedModelProduct;
 import com.management.product.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
@@ -214,6 +215,44 @@ class ProductControllerXmlTest extends AbstractIntegrationTest {
 
         assertEquals("Laptop Dell Inspiron", productFour.getName());
         assertEquals(1500.0, productFour.getPrice());
+        Assertions.assertTrue(productFour.getInStock());
+    }
+
+    @Test
+    @Order(7)
+    void findProductByName() throws IOException {
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                .pathParams("name", "de")
+                .queryParam("page", 0, "size", 10, "direction", "asc")
+                .when()
+                .get("search/{name}")
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                .body()
+                .asString();
+
+        PagedModelProduct wrapper = objectMapper.readValue(content, PagedModelProduct.class);
+        List<ProductDTO> products = wrapper.getContent();
+
+        ProductDTO productOne = products.get(1);
+
+        assertNotNull(productOne.getId());
+        assertTrue(productOne.getId() > 0);
+
+        assertEquals("Fone de ouvido Sony WH-1000XM4", productOne.getName());
+        assertEquals(2299.0, productOne.getPrice());
+        Assertions.assertTrue(productOne.getInStock());
+
+        ProductDTO productFour = products.get(4);
+
+        assertNotNull(productFour.getId());
+        assertTrue(productFour.getId() > 0);
+
+        assertEquals("Máquina de Lavar Samsung 10kg", productFour.getName());
+        assertEquals(1999.0, productFour.getPrice());
         Assertions.assertTrue(productFour.getInStock());
     }
 

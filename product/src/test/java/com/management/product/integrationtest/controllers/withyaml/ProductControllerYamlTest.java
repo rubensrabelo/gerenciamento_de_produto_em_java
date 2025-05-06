@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.management.product.config.TestConfigs;
 import com.management.product.integrationtest.controllers.withyaml.mapper.YAMLMapper;
 import com.management.product.integrationtest.dto.ProductDTO;
+import com.management.product.integrationtest.dto.wrappers.xml.PagedModelProduct;
 import com.management.product.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
@@ -158,7 +159,7 @@ class ProductControllerYamlTest extends AbstractIntegrationTest {
     @Test
     @Order(6)
     void findAll() throws IOException {
-        String response = given(specification)
+        String content = given(specification)
                 .accept(MediaType.APPLICATION_YAML_VALUE)
                 .queryParam("page", 0, "size", 10, "direction", "asc")
                 .when()
@@ -170,7 +171,7 @@ class ProductControllerYamlTest extends AbstractIntegrationTest {
                 .body()
                 .asString();
 
-        JsonNode root = objectMapper.getMapper().readTree(response);
+        JsonNode root = objectMapper.getMapper().readTree(content);
         JsonNode contentNode = root.get("content");
 
         List<ProductDTO> products = objectMapper.getMapper()
@@ -192,6 +193,47 @@ class ProductControllerYamlTest extends AbstractIntegrationTest {
 
         assertEquals("Laptop Dell Inspiron", productFour.getName());
         assertEquals(1500.0, productFour.getPrice());
+        Assertions.assertTrue(productFour.getInStock());
+    }
+
+    @Test
+    @Order(7)
+    void findProductByName() throws IOException {
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
+                .pathParams("name", "de")
+                .queryParam("page", 0, "size", 10, "direction", "asc")
+                .when()
+                .get("search/{name}")
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .extract()
+                .body()
+                .asString();
+
+        JsonNode root = objectMapper.getMapper().readTree(content);
+        JsonNode contentNode = root.get("content");
+
+        List<ProductDTO> products = objectMapper.getMapper()
+                .readValue(contentNode.toString(), new TypeReference<>() {});
+
+        ProductDTO productOne = products.get(1);
+
+        assertNotNull(productOne.getId());
+        assertTrue(productOne.getId() > 0);
+
+        assertEquals("Fone de ouvido Sony WH-1000XM4", productOne.getName());
+        assertEquals(2299.0, productOne.getPrice());
+        Assertions.assertTrue(productOne.getInStock());
+
+        ProductDTO productFour = products.get(4);
+
+        assertNotNull(productFour.getId());
+        assertTrue(productFour.getId() > 0);
+
+        assertEquals("Máquina de Lavar Samsung 10kg", productFour.getName());
+        assertEquals(1999.0, productFour.getPrice());
         Assertions.assertTrue(productFour.getInStock());
     }
 

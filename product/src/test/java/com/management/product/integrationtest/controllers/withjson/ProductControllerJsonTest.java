@@ -214,6 +214,44 @@ class ProductControllerJsonTest extends AbstractIntegrationTest {
         Assertions.assertTrue(productFour.getInStock());
     }
 
+    @Test
+    @Order(7)
+    void findProductByName() throws IOException {
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .pathParams("name", "de")
+                .queryParam("page", 0, "size", 10, "direction", "asc")
+                .when()
+                .get("search/{name}")
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                .body()
+                .asString();
+
+        WrapperProductDTO wrapper = objectMapper.readValue(content, WrapperProductDTO.class);
+        var products = wrapper.getEmbedded().getProducts();
+
+        ProductDTO productOne = products.get(1);
+
+        assertNotNull(productOne.getId());
+        assertTrue(productOne.getId() > 0);
+
+        assertEquals("Fone de ouvido Sony WH-1000XM4", productOne.getName());
+        assertEquals(2299.0, productOne.getPrice());
+        Assertions.assertTrue(productOne.getInStock());
+
+        ProductDTO productFour = products.get(4);
+
+        assertNotNull(productFour.getId());
+        assertTrue(productFour.getId() > 0);
+
+        assertEquals("Máquina de Lavar Samsung 10kg", productFour.getName());
+        assertEquals(1999.0, productFour.getPrice());
+        Assertions.assertTrue(productFour.getInStock());
+    }
+
     private void mockProduct() {
         product.setName("Product 01");
         product.setPrice(1.00);
