@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.management.product.data.dto.ProductDTO;
 import com.management.product.models.Product;
 import com.management.product.repositories.ProductRepository;
-import com.management.product.unittest.mapper.mocks.MockProduct;
+import com.management.product.mapper.mocks.MockProduct;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

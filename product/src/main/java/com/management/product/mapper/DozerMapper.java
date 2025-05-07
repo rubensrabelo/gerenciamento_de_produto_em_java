@@ -1,4 +1,4 @@
-package com.management.product.unittest.mapper;
+package com.management.product.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;

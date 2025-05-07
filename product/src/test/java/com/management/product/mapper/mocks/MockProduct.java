@@ -1,4 +1,4 @@
-package com.management.product.unittest.mapper.mocks;
+package com.management.product.mapper.mocks;
 
 import java.util.ArrayList;
 import java.util.List;

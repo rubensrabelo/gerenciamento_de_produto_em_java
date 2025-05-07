@@ -1,4 +1,4 @@
-package com.management.product.unittest.mapper;
+package com.management.product.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.management.product.data.dto.ProductDTO;
 import com.management.product.models.Product;
-import com.management.product.unittest.mapper.mocks.MockProduct;
+import com.management.product.mapper.mocks.MockProduct;
 
 public class DozerConverterTest {
 	

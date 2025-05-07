@@ -7,7 +7,7 @@ import com.management.product.repositories.ProductRepository;
 import com.management.product.services.exceptions.DatabaseException;
 import com.management.product.services.exceptions.RequiredObjectIsNullException;
 import com.management.product.services.exceptions.ResourceNotFoundException;
-import com.management.product.unittest.mapper.DozerMapper;
+import com.management.product.mapper.DozerMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
