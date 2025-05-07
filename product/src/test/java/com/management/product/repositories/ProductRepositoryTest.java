@@ -1,30 +1,31 @@
 package com.management.product.repositories;
 
+import com.management.product.integrationtest.testcontainers.AbstractIntegrationTest;
 import com.management.product.models.Product;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ProductRepositoryTest {
+class ProductRepositoryTest extends AbstractIntegrationTest {
 
     @Autowired
     ProductRepository repository;
     private static Product product;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         product = new Product();
     }
 
@@ -51,9 +52,12 @@ class ProductRepositoryTest {
     @Test
     @Order(2)
     void productIsNotInStock() {
-        repository.productIsNotInStock(product.getId());
 
-        var result = repository.findById(product.getId());
+        Long id = product.getId();
+        repository.productIsNotInStock(id);
+
+
+        var result = repository.findById(id);
         product = result.get();
 
         assertNotNull(product);
