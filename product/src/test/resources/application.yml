@@ -2,6 +2,8 @@ server:
   port: 8888
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000
+file:
+  upload-dir: /github_projetos/java/code/uploadDir
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -15,6 +17,12 @@ spring:
   sql:
     init:
       mode: always
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
 
 #logging:
 #  level:
