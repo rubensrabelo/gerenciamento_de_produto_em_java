@@ -3,7 +3,6 @@ package com.management.product.controllers;
 import com.management.product.controllers.docs.FileControllerDocs;
 import com.management.product.data.dto.UploadFileResponseDTO;
 import com.management.product.services.FileStorageService;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class FileController implements FileControllerDocs {
 
     @GetMapping("/downloadFile/{fileName:.+}")
     @Override
-    public ResponseEntity<Resource> downloadFile(String fileName, HttpServletRequest request) {
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = service.loadFileAsResource(fileName);
         String contentType = null;
 
